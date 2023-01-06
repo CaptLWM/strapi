@@ -1,8 +1,15 @@
-'use strict';
+const { default: createStrapi } = require("strapi");
+const { sanitizeEntity } = require("strapi-utils/lib");
 
-/**
- * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
- * to customize this controller
- */
+module.exports = {
+  async create(ctx) {
+    // 사용자의 id를 데이터에 추가
+    ctx.request.body.user = ctx.state.user.id;
 
-module.exports = {};
+    // article 데이터 생성
+    const entify = await createStrapi.services.article.create(ctx.request.body);
+
+    // 잘못된 필드 및 Private 값 제외하고 반환
+    return sanitizeEntity(entity, { modle: strapi.models.article });
+  },
+};
